@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "atlas",
+	"version": "${version}",
+	"name": "Atlas",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"kovacsi0907"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/atlas/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"kovacsi0907.atlas.Atlas"
+		],
+		"client": [
+			"kovacsi0907.atlas.AtlasClient"
+		],
+		"fabric-datagen": [
+			"kovacsi0907.atlas.AtlasDataGenerator"
+		]
+	},
+	"mixins": [
+		"atlas.mixins.json",
+		{
+			"config": "atlas.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.14.13",
+		"minecraft": "~1.19.3",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
