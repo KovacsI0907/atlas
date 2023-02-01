@@ -1,0 +1,8 @@
+{
+"skills.bronze_weapon_smithing.name" : "Bronze weapon smithing",
+"skills.bronze_weapon_smithing.description" : "Allows you to craft weapons out of bronze",
+"skills.iron_weapon_smithing.name" : "Iron weapon smithing",
+"skills.iron_weapon_smithing.description" : "Allows you to craft weapons out of iron",
+"skills.experience_needed" : "Unlockable at %dXP (%dXP left)",
+"skills.unlock_button" : "Unlock"
+}
