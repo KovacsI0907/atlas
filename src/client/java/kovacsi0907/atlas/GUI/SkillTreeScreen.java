@@ -37,8 +37,8 @@ public abstract class SkillTreeScreen extends Screen {
     List<Pos2> connections = new ArrayList<>();
 
     ButtonWidget unlockButton = ButtonWidget.builder(Text.translatable("skills.unlock_button"), (button -> {
-        if(activeButton != null && !hasSkill(activeButton.skill)){
-
+        if(activeButton != null && !hasSkill(activeButton.skill) && getXPNeeded(activeButton.skill.expType, activeButton.skill.xpRequired) == 0){
+            ClientNetworkFunctions.requestGetSkill(activeButton.skill.id);
         }
     })).size(60, 20).build();
     protected SkillTreeScreen(Text title) {
@@ -92,8 +92,7 @@ public abstract class SkillTreeScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         unlockButton.visible = activeButton!=null;
         if(activeButton != null)
-            unlockButton.active = (!hasSkill(activeButton.skill))&&(getXPNeeded(activeButton.skill.xpRequired) == 0);
-
+            unlockButton.active = (!hasSkill(activeButton.skill))&&(getXPNeeded(activeButton.skill.expType ,activeButton.skill.xpRequired) == 0);
         fill(matrices, 0, 0, this.width, this.height, BACKGROUND_COLOR);
         drawConnectingLines(connections, matrices);
         super.render(matrices, mouseX, mouseY, delta);
@@ -104,7 +103,7 @@ public abstract class SkillTreeScreen extends Screen {
                     matrices,
                     new Text[]{
                             skill.name,
-                            Text.translatable("skills.experience_needed", skill.xpRequired, getXPNeeded(skill.xpRequired)),
+                            Text.translatable("skills.experience_needed", skill.xpRequired, getXPNeeded(activeButton.skill.expType ,skill.xpRequired)),
                             skill.description
                     },
                     (int)(this.width*TEXT_BOX_MARGIN),
@@ -159,9 +158,9 @@ public abstract class SkillTreeScreen extends Screen {
         return (int)y;
     }
 
-    int getXPNeeded(int needed){
+    int getXPNeeded(ExpType type, int needed){
         for(Experience exp : AtlasClient.experienceList){
-            if(exp.type == ExpType.SMITHING)
+            if(exp.type == type)
                 if(needed-exp.points>0)
                     return needed-exp.points;
                 else return 0;

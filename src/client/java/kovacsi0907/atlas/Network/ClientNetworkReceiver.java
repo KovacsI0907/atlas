@@ -7,11 +7,14 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import java.util.List;
 
-public abstract class ClientNetworkReciever {
+public abstract class ClientNetworkReceiver {
 
     public static void registerListeners() {
         ClientPlayNetworking.registerGlobalReceiver(Channels.PLAYER_SKILLS_PACKET, ((client, handler, buf, responseSender) -> {
-            AtlasClient.skills = List.of(buf.readString().split(";"));
+            AtlasClient.skills.clear();
+            for(int i = buf.readInt();i>0;i--){
+                AtlasClient.skills.add(buf.readString());
+            }
         }));
 
         ClientPlayNetworking.registerGlobalReceiver(Channels.PLAYER_XP_PACKET, ((client, handler, buf, responseSender) -> {
@@ -19,6 +22,10 @@ public abstract class ClientNetworkReciever {
             AtlasClient.experienceList.clear();
             for(int i = buf.readInt();i>0;i--){
                 AtlasClient.experienceList.add(new Experience(enumValues[buf.readInt()], buf.readInt()));
+            }
+            AtlasClient.overallExperienceList.clear();
+            for(int i = buf.readInt();i>0;i--){
+                AtlasClient.overallExperienceList.add(new Experience(enumValues[buf.readInt()], buf.readInt()));
             }
         }));
     }

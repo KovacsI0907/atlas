@@ -4,6 +4,7 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Skills {
@@ -38,5 +39,25 @@ public class Skills {
             600,
             new Skill[]{IRON_WEAPON_SMITHING},
             false);
-    public static Skill[] SMITHING_SKILLS = {BRONZE_WEAPON_SMITHING, IRON_WEAPON_SMITHING, SILVER_WEAPON_SMITHING, GOLD_WEAPON_SMITHING};
+
+    public static Skill MAKE_CROSSBOW = new Skill("gold_weapon_smithing",
+            Text.translatable("skills.make_crossbow.name"),
+            Text.translatable("skills.make_crossbow.description"),
+            ExpType.BOWYERY,
+            600,
+            new Skill[]{IRON_WEAPON_SMITHING},
+            false);
+
+    static HashMap<String, Skill> SKILLS = new HashMap<>();
+    public static void registerSkills() {
+        SKILLS.put(BRONZE_WEAPON_SMITHING.id, BRONZE_WEAPON_SMITHING);
+        SKILLS.put(SILVER_WEAPON_SMITHING.id, SILVER_WEAPON_SMITHING);
+        SKILLS.put(GOLD_WEAPON_SMITHING.id, GOLD_WEAPON_SMITHING);
+        SKILLS.put(IRON_WEAPON_SMITHING.id, IRON_WEAPON_SMITHING);
+        SKILLS.put(MAKE_CROSSBOW.id, MAKE_CROSSBOW);
+    }
+
+    public static Skill getSkillFromId(String skillId){
+        return SKILLS.get(skillId);
+    }
 }
