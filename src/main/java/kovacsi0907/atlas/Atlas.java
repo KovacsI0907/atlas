@@ -57,7 +57,6 @@ public class Atlas implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		LOGGER.info("newnewtest");
 		LOGGER.info("Hello Fabric world!");
 		ServerNetworkReceiver.registerListeners();
 		Skills.registerSkills();
