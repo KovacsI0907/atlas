@@ -17,8 +17,8 @@ import java.util.List;
 
 public abstract class SkillTreeScreen extends Screen {
 
-    final Identifier GOLD_SELECTOR_TEXTURE = new Identifier("atlas:textures/gui/skills/gold_selector.png");
-    final Identifier GREEN_SELECTOR_TEXTURE = new Identifier("atlas:textures/gui/skills/green_selector.png");
+    final Identifier GOLD_SELECTOR_TEXTURE = new Identifier("atlas:textures/gui/skills/select_frame.png");
+    final Identifier GREEN_SELECTOR_TEXTURE = new Identifier("atlas:textures/gui/skills/obtained_frame.png");
     final int HALF_TEXTURE_SIZE = 16;
     final double SPACE_FOR_TREE = 0.7f;
     final int PIXELS_FOR_UNLOCK_BUTTON = 30;
