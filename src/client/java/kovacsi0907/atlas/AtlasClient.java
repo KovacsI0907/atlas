@@ -19,7 +19,6 @@ public class AtlasClient implements ClientModInitializer {
 		// This entrypoint is suitable for setting up client-specific logic, such as rendering.
 		KeyBindings.init();
 		ClientNetworkReceiver.registerListeners();
-		HandledScreens.register(Atlas.BOX_SCREEN_HANDLER, TestScreen::new);
 
 		ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
 			ClientNetworkFunctions.syncSkills();
