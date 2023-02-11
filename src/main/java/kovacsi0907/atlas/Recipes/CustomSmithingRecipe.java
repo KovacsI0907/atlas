@@ -1,6 +1,7 @@
 package kovacsi0907.atlas.Recipes;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
@@ -11,23 +12,51 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
     private final Identifier id;
     private final ItemStack result;
     private final DefaultedList<Ingredient> recipeItems;
 
-    public CustomSmithingRecipe(Identifier id, ItemStack result, DefaultedList<Ingredient> recipeItems) {
+    public List<String> getSkillsNeeded() {
+        return skillsNeeded;
+    }
+
+    private final List<String> skillsNeeded;
+
+    public int getXpGain() {
+        return xpGain;
+    }
+
+    public int getTimeToMake() {
+        return timeToMake;
+    }
+
+    private final int xpGain;
+    private final int timeToMake;
+
+    private CustomSmithingRecipe(Identifier id, ItemStack result, DefaultedList<Ingredient> recipeItems, List<String> skillsNeeded, int xpGain, int timeToMake) {
         this.id = id;
         this.result = result;
         this.recipeItems = recipeItems;
+        this.skillsNeeded = skillsNeeded;
+        this.xpGain = xpGain;
+        this.timeToMake = timeToMake;
     }
 
     @Override
-    public boolean matches(SimpleInventory inventory, World world) {
+    public boolean matches(SimpleInventory craftingInventory, World world) {
         if(world.isClient())
             return false;
 
-        return recipeItems.get(0).test(inventory.getStack(1));
+        for(int i = 0;i< recipeItems.size();i++){
+            if(!recipeItems.get(i).test(craftingInventory.getStack(i)))
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -72,23 +101,41 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
         @Override
         public CustomSmithingRecipe read(Identifier id, JsonObject json) {
             ItemStack result = ShapedRecipe.outputFromJson(JsonHelper.getObject(json, "result"));
-            JsonArray ingredients = JsonHelper.getArray(json, "ingredients");
-            DefaultedList<Ingredient> inputs = DefaultedList.ofSize(1, Ingredient.EMPTY);
-            for(int i = 0; i<inputs.size();i++){
-                inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
+            JsonArray ingredientsJson = JsonHelper.getArray(json, "ingredients");
+            DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(9, Ingredient.EMPTY);
+            for(int i = 0; i< ingredientsJson.size()&&i<ingredients.size();i++){
+                ingredients.set(i, Ingredient.fromJson(ingredientsJson.get(i)));
             }
+            DefaultedList<Ingredient> input = DefaultedList.ofSize(9, Ingredient.EMPTY);
+            JsonArray pattern = JsonHelper.getArray(json, "pattern");
+            for(int i = 0;i< input.size();i++){
+                if(pattern.get(i).getAsInt() == 0)
+                    continue;
+                input.set(i, ingredients.get(pattern.get(i).getAsInt()-1));
+            }
+            List<String> skillsNeeded = new ArrayList<>();
+            try{
+                JsonArray skillJsonArray = JsonHelper.getArray(json, "skills_needed");
+                for(JsonElement element : skillJsonArray)
+                    skillsNeeded.add(element.getAsString());
+            }catch (Exception ignored){}
 
-            return new CustomSmithingRecipe(id, result, inputs);
+            return new CustomSmithingRecipe(id, result, input, skillsNeeded, JsonHelper.getInt(json, "xp"), JsonHelper.getInt(json, "time"));
         }
 
         @Override
         public CustomSmithingRecipe read(Identifier id, PacketByteBuf buf) {
-            DefaultedList<Ingredient> inputs = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
-            for (int i = 0;i<inputs.size();i++){
-                inputs.set(i, Ingredient.fromPacket(buf));
-            }
+            DefaultedList<Ingredient> recipeItems = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
+            recipeItems.replaceAll(ignored -> Ingredient.fromPacket(buf));
+            int xpGain = buf.readInt();
+            int timeToMake = buf.readInt();
             ItemStack result = buf.readItemStack();
-            return new CustomSmithingRecipe(id, result, inputs);
+            List<String> skillsNeeded = new ArrayList<>();
+            for(int i = buf.readInt();i>0;i--){
+                skillsNeeded.add(buf.readString());
+            }
+
+            return new CustomSmithingRecipe(id, result, recipeItems, skillsNeeded, xpGain, timeToMake);
         }
 
         @Override
@@ -97,7 +144,13 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
             for(Ingredient input : recipe.recipeItems){
                 input.write(buf);
             }
+            buf.writeInt(recipe.xpGain);
+            buf.writeInt(recipe.timeToMake);
             buf.writeItemStack(recipe.getOutput());
+            buf.writeInt(recipe.skillsNeeded.size());
+            for(String skill : recipe.skillsNeeded){
+                buf.writeString(skill);
+            }
         }
     }
 }

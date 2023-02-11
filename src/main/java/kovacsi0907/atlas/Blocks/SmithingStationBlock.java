@@ -22,6 +22,7 @@ public class SmithingStationBlock extends BlockWithEntity implements BlockEntity
         super(settings);
     }
 
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {

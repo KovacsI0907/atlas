@@ -1,26 +1,12 @@
 package kovacsi0907.atlas;
 
 import kovacsi0907.atlas.Blocks.CustomBlocks;
+import kovacsi0907.atlas.Items.CustomItems;
 import kovacsi0907.atlas.Network.ServerNetworkReceiver;
 import kovacsi0907.atlas.Recipes.CustomRecipes;
 import kovacsi0907.atlas.ScreenHandlers.CustomScreenHandlers;
 import kovacsi0907.atlas.Skills.Skills;
 import net.fabricmc.api.ModInitializer;
-
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +27,7 @@ public class Atlas implements ModInitializer {
 		ServerNetworkReceiver.registerListeners();
 		Skills.registerSkills();
 		CustomBlocks.registerBlocksAndEntities();
+		CustomItems.registerItems();
 		CustomRecipes.registerRecipes();
 		CustomScreenHandlers.regiterScreenHandlers();
 	}

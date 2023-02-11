@@ -2,10 +2,7 @@
   "type": "atlas:custom_smithing",
   "ingredients": [
     {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:oak_log"
+      "item": "minecraft:gold_ingot"
     }
   ],
   "pattern": [
@@ -15,7 +12,10 @@
   ],
   "time": 20,
   "result": {
-    "item": "minecraft:bedrock"
+    "item": "minecraft:diamond"
   },
-  "xp": 10
+  "xp": 100,
+  "skills_needed": [
+    "bronze_weapon_smithing"
+  ]
 }

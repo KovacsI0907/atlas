@@ -1,6 +1,5 @@
 package kovacsi0907.atlas.ScreenHandlers;
 
-import kovacsi0907.atlas.ImplementedInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -9,9 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import org.jetbrains.annotations.Nullable;
 
 public class SmithingStationScreenHandler extends ScreenHandler {
 
@@ -19,18 +16,22 @@ public class SmithingStationScreenHandler extends ScreenHandler {
     private final PropertyDelegate propertyDelegate;
 
     public SmithingStationScreenHandler(int syncId, PlayerInventory inventory){
-        this(syncId, inventory, new SimpleInventory(3), new ArrayPropertyDelegate(2));
+        this(syncId, inventory, new SimpleInventory(11), new ArrayPropertyDelegate(4));
     }
     public SmithingStationScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(CustomScreenHandlers.SMITHING_STATION_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 3);
+        checkSize(inventory, 11);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = propertyDelegate;
 
-        this.addSlot(new Slot(inventory, 0, 12, 15));
-        this.addSlot(new Slot(inventory, 1, 86, 15));
-        this.addSlot(new Slot(inventory, 2, 86, 60));
+        for(int i = 0;i<3;i++){
+            for (int j = 0;j<3;j++){
+                this.addSlot(new Slot(inventory, 3*i+j, 20+i*18, 9+j*18));
+            }
+        }
+        this.addSlot(new Slot(inventory, 9, 82, 62));
+        this.addSlot(new Slot(inventory, 10, 116, 27));
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
@@ -42,7 +43,7 @@ public class SmithingStationScreenHandler extends ScreenHandler {
     public ItemStack quickMove(PlayerEntity player, int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(invSlot);
-        if (slot != null && slot.hasStack()) {
+        if (slot.hasStack()) {
             ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
             if (invSlot < this.inventory.size()) {
@@ -71,14 +72,14 @@ public class SmithingStationScreenHandler extends ScreenHandler {
     private void addPlayerInventory(PlayerInventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(PlayerInventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
 
@@ -86,11 +87,17 @@ public class SmithingStationScreenHandler extends ScreenHandler {
         return propertyDelegate.get(0) > 0;
     }
 
-    public int getScaledProgress() {
+    public float getScaledProgress() {
         int progress = this.propertyDelegate.get(0);
-        int maxProgress = this.propertyDelegate.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the width in pixels of your arrow
+        int maxProgress = this.propertyDelegate.get(1);
 
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+        return maxProgress != 0 && progress != 0 ? (float)progress / maxProgress : 0;
+    }
+
+    public float getScaledFuel() {
+        int fuel = this.propertyDelegate.get(2);
+        int maxFuel = this.propertyDelegate.get(3);
+
+        return maxFuel != 0 && fuel != 0 ? (float)fuel / maxFuel : 0;
     }
 }
