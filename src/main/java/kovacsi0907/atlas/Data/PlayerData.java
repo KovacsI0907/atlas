@@ -1,6 +1,6 @@
 package kovacsi0907.atlas.Data;
 
-import kovacsi0907.atlas.Experience;
+import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.ExpType;
 import net.minecraft.nbt.NbtCompound;
 

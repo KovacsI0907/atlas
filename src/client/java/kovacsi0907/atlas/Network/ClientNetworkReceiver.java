@@ -1,11 +1,9 @@
 package kovacsi0907.atlas.Network;
 
 import kovacsi0907.atlas.AtlasClient;
-import kovacsi0907.atlas.Experience;
+import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.ExpType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-
-import java.util.List;
 
 public abstract class ClientNetworkReceiver {
 

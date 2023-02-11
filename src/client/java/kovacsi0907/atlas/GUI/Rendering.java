@@ -46,7 +46,7 @@ public final class Rendering {
         textBox(matrices, new Text[]{text}, x, y, width, height, color, bgColor, borderColor);
     }
 
-    static void textBox(MatrixStack matrices, Text[] lines, int x, int y, int width, int height, int color, int bgColor, int borderColor) {
+    public static void textBox(MatrixStack matrices, Text[] lines, int x, int y, int width, int height, int color, int bgColor, int borderColor) {
         List<OrderedText> wrappedLines = new ArrayList<>();
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         for(Text line : lines){

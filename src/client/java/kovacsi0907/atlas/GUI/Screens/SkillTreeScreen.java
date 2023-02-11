@@ -1,11 +1,12 @@
-package kovacsi0907.atlas.GUI;
+package kovacsi0907.atlas.GUI.Screens;
 
 import kovacsi0907.atlas.AtlasClient;
-import kovacsi0907.atlas.Experience;
+import kovacsi0907.atlas.GUI.Pos2;
+import kovacsi0907.atlas.GUI.Rendering;
+import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Network.ClientNetworkFunctions;
 import kovacsi0907.atlas.Skills.ExpType;
 import kovacsi0907.atlas.Skills.Skill;
-import kovacsi0907.atlas.Skills.Skills;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;

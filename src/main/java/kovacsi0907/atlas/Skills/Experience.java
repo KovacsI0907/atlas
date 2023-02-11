@@ -1,4 +1,4 @@
-package kovacsi0907.atlas;
+package kovacsi0907.atlas.Skills;
 
 import kovacsi0907.atlas.Skills.ExpType;
 

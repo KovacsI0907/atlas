@@ -1,10 +1,7 @@
-package kovacsi0907.atlas.GUI;
+package kovacsi0907.atlas.GUI.Screens;
 
 import kovacsi0907.atlas.Skills.Skill;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class SkillButtonWidget extends TexturedButtonWidget {

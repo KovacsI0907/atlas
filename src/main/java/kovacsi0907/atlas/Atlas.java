@@ -1,6 +1,9 @@
 package kovacsi0907.atlas;
 
+import kovacsi0907.atlas.Blocks.CustomBlocks;
 import kovacsi0907.atlas.Network.ServerNetworkReceiver;
+import kovacsi0907.atlas.Recipes.CustomRecipes;
+import kovacsi0907.atlas.ScreenHandlers.CustomScreenHandlers;
 import kovacsi0907.atlas.Skills.Skills;
 import net.fabricmc.api.ModInitializer;
 
@@ -37,5 +40,8 @@ public class Atlas implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 		ServerNetworkReceiver.registerListeners();
 		Skills.registerSkills();
+		CustomBlocks.registerBlocksAndEntities();
+		CustomRecipes.registerRecipes();
+		CustomScreenHandlers.regiterScreenHandlers();
 	}
 }

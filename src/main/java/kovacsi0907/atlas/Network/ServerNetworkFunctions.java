@@ -2,7 +2,7 @@ package kovacsi0907.atlas.Network;
 
 import kovacsi0907.atlas.Data.PlayerData;
 import kovacsi0907.atlas.Data.ServerData;
-import kovacsi0907.atlas.Experience;
+import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.Skill;
 import kovacsi0907.atlas.Skills.Skills;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

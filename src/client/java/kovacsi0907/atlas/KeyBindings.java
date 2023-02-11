@@ -1,6 +1,6 @@
 package kovacsi0907.atlas;
 
-import kovacsi0907.atlas.GUI.SmithingSkillTreeScreen;
+import kovacsi0907.atlas.GUI.Screens.SmithingSkillTreeScreen;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;

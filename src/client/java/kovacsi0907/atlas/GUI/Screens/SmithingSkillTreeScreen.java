@@ -1,7 +1,6 @@
-package kovacsi0907.atlas.GUI;
+package kovacsi0907.atlas.GUI.Screens;
 
 import kovacsi0907.atlas.Skills.Skills;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
