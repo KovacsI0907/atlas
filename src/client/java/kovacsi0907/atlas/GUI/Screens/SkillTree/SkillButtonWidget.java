@@ -1,4 +1,4 @@
-package kovacsi0907.atlas.GUI.Screens;
+package kovacsi0907.atlas.GUI.Screens.SkillTree;
 
 import kovacsi0907.atlas.Skills.Skill;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;

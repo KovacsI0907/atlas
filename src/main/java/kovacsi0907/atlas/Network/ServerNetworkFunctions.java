@@ -2,6 +2,7 @@ package kovacsi0907.atlas.Network;
 
 import kovacsi0907.atlas.Data.PlayerData;
 import kovacsi0907.atlas.Data.ServerData;
+import kovacsi0907.atlas.Data.WareStack;
 import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.Skill;
 import kovacsi0907.atlas.Skills.Skills;
@@ -10,6 +11,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.List;
 
 public final class ServerNetworkFunctions {
     public static void sendExperiencePacket(ServerPlayerEntity player, MinecraftServer server) {
@@ -59,5 +62,15 @@ public final class ServerNetworkFunctions {
         }
         sendUnlockedSkillsPacket(player, server);
         sendExperiencePacket(player, server);
+    }
+
+    public static void sendWareStacksPacket(ServerPlayerEntity player, MinecraftServer server, String vendorId) {
+        List<WareStack> wareStacks = ServerData.getWareStacksForVendor(server, vendorId);
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeInt(wareStacks.size());
+        for(WareStack stack : wareStacks){
+            buffer.writeBytes(stack.createPacket());
+        }
+        ServerPlayNetworking.send(player, Channels.REQUEST_GET_WARESTACKS, buffer);
     }
 }

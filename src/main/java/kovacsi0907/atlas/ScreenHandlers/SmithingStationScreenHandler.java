@@ -100,4 +100,9 @@ public class SmithingStationScreenHandler extends ScreenHandler {
 
         return maxFuel != 0 && fuel != 0 ? (float)fuel / maxFuel : 0;
     }
+
+    @Override
+    public boolean onButtonClick(PlayerEntity player, int id) {
+        return super.onButtonClick(player, id);
+    }
 }

@@ -1,11 +1,11 @@
-package kovacsi0907.atlas.GUI.Screens;
+package kovacsi0907.atlas.GUI.Screens.SkillTree;
 
 import kovacsi0907.atlas.AtlasClient;
 import kovacsi0907.atlas.GUI.Pos2;
 import kovacsi0907.atlas.GUI.Rendering;
-import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Network.ClientNetworkFunctions;
 import kovacsi0907.atlas.Skills.ExpType;
+import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.Skill;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;

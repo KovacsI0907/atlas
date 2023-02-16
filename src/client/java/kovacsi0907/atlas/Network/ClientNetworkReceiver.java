@@ -1,8 +1,9 @@
 package kovacsi0907.atlas.Network;
 
 import kovacsi0907.atlas.AtlasClient;
-import kovacsi0907.atlas.Skills.Experience;
+import kovacsi0907.atlas.Data.WareStack;
 import kovacsi0907.atlas.Skills.ExpType;
+import kovacsi0907.atlas.Skills.Experience;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public abstract class ClientNetworkReceiver {
@@ -25,6 +26,18 @@ public abstract class ClientNetworkReceiver {
             for(int i = buf.readInt();i>0;i--){
                 AtlasClient.overallExperienceList.add(new Experience(enumValues[buf.readInt()], buf.readInt()));
             }
+        }));
+
+        ClientPlayNetworking.registerGlobalReceiver(Channels.REQUEST_GET_WARESTACKS, (((client, handler, buf, responseSender) -> {
+            AtlasClient.wareStacks.clear();
+            for(int i = buf.readInt();i>0;i--){
+                AtlasClient.wareStacks.add(WareStack.fromPacket(buf));
+            }
+            AtlasClient.wareStacksUpdated = true;
+        })));
+
+        ClientPlayNetworking.registerGlobalReceiver(Channels.REQUEST_SELL_ITEMS, ((client, handler, buf, responseSender) -> {
+            AtlasClient.sellResponse = buf.readString();
         }));
     }
 }
