@@ -33,11 +33,12 @@ public abstract class ClientNetworkReceiver {
             for(int i = buf.readInt();i>0;i--){
                 AtlasClient.wareStacks.add(WareStack.fromPacket(buf));
             }
-            AtlasClient.wareStacksUpdated = true;
+            TrackedNetworkReciever.receive(Channels.REQUEST_GET_WARESTACKS);
         })));
 
         ClientPlayNetworking.registerGlobalReceiver(Channels.REQUEST_SELL_ITEMS, ((client, handler, buf, responseSender) -> {
             AtlasClient.sellResponse = buf.readString();
+            TrackedNetworkReciever.receive(Channels.REQUEST_SELL_ITEMS);
         }));
     }
 }

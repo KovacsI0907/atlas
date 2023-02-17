@@ -28,14 +28,7 @@ public abstract class ClientNetworkFunctions {
 
     public static void requestGetWareStacksForVendorAndWait(String vendorId){
         requestGetWareStacksForVendor(vendorId);
-        while(!AtlasClient.wareStacksUpdated) {
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        AtlasClient.wareStacksUpdated = false;
+        TrackedNetworkReciever.trackAndWait(Channels.REQUEST_GET_WARESTACKS, 20, 1000);
     }
 
     public static String requestSellItemsAndGetResponse(int slot, int itemId, String vendorId, int amount, int price, int discount) {
@@ -47,13 +40,7 @@ public abstract class ClientNetworkFunctions {
         buffer.writeInt(price);
         buffer.writeInt(discount);
         ClientPlayNetworking.send(Channels.REQUEST_SELL_ITEMS, buffer);
-        while(AtlasClient.sellResponse.equals("")){
-            try {
-                Thread.sleep(20);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        TrackedNetworkReciever.trackAndWait(Channels.REQUEST_SELL_ITEMS, 20, 1000);
         String response = AtlasClient.sellResponse;
         AtlasClient.sellResponse = "";
         return response;

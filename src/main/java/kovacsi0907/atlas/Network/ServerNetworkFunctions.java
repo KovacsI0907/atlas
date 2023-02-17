@@ -73,4 +73,10 @@ public final class ServerNetworkFunctions {
         }
         ServerPlayNetworking.send(player, Channels.REQUEST_GET_WARESTACKS, buffer);
     }
+
+    public static void sendMoney(MinecraftServer server, ServerPlayerEntity player) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeDouble(ServerData.getOrCreatePlayerData(server, player.getUuidAsString()).money);
+        ServerPlayNetworking.send(player, Channels.GET_MONEY, buffer);
+    }
 }

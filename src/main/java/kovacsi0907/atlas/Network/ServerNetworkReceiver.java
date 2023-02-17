@@ -53,5 +53,10 @@ public abstract class ServerNetworkReceiver {
 
             ServerPlayNetworking.send(player, Channels.REQUEST_SELL_ITEMS, PacketByteBufs.create().writeString(response));
         }));
+
+        ServerPlayNetworking.registerGlobalReceiver(Channels.GET_MONEY, ((server, player, handler, buf, responseSender) -> {
+            ServerNetworkFunctions.sendMoney(server, player);
+        }));
     }
+
 }
