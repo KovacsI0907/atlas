@@ -34,6 +34,7 @@ public abstract class ServerNetworkReceiver {
             int amount = buf.readInt();
             int price = buf.readInt();
             int discount = buf.readInt();
+            int discountVolume = buf.readInt();
             String response = "error";
             ItemStack stack = player.getInventory().main.get(slot);
             if(Item.getRawId(stack.getItem()) == itemId && stack.getCount() >= amount){
@@ -41,10 +42,12 @@ public abstract class ServerNetworkReceiver {
                 player.getInventory().markDirty();
                 ServerData.getServerData(server).wareStacks.add(new WareStack(
                         player.getUuidAsString(),
+                        player.getGameProfile().getName(),
                         Item.byRawId(itemId),
                         amount,
                         price,
                         discount,
+                        discountVolume,
                         Arrays.stream(new String[]{vendorId}).toList()
                 ));
                 response = "success";

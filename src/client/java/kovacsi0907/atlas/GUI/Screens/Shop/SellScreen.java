@@ -1,7 +1,6 @@
 package kovacsi0907.atlas.GUI.Screens.Shop;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import kovacsi0907.atlas.AtlasClient;
 import kovacsi0907.atlas.GUI.Rendering;
 import kovacsi0907.atlas.Network.ClientNetworkFunctions;
 import net.minecraft.client.MinecraftClient;
@@ -24,6 +23,7 @@ public class SellScreen extends Screen {
     TextFieldWidget amountField;
     TextFieldWidget priceField;
     TextFieldWidget discountField;
+    TextFieldWidget discountVolumeField;
 
     final float MARGIN = 0.1f;
     final int BORDER_WIDTH = 4;
@@ -38,6 +38,7 @@ public class SellScreen extends Screen {
         amountField = new TextFieldWidget(this.textRenderer, 0,0, 30, 15, Text.translatable("shop.amount_field"));
         priceField = new TextFieldWidget(this.textRenderer, 0,0, 30, 15, Text.translatable("shop.price_field"));
         discountField = new TextFieldWidget(this.textRenderer, 0,0, 30, 15, Text.translatable("shop.discount_field"));
+        discountVolumeField = new TextFieldWidget(this.textRenderer, 0,0, 30, 15, Text.translatable("shop.discount_volume_field"));
     }
 
 
@@ -47,24 +48,25 @@ public class SellScreen extends Screen {
         this.addDrawableChild(amountField);
         this.addDrawableChild(priceField);
         this.addDrawableChild(discountField);
-        amountField.setPos(getSplitPosX()+10, getSlotY(0));
-        priceField.setPos(getSplitPosX()+10, getSlotY(0) + 30);
-        discountField.setPos(getSplitPosX()+10, getSlotY(0) + 60);
+        this.addDrawableChild(discountVolumeField);
+        amountField.setPos(getEndPosX()-amountField.getWidth()-5, getSlotY(0));
+        priceField.setPos(getEndPosX()-priceField.getWidth()-5, getSlotY(0) + 30);
+        discountField.setPos(getEndPosX()-discountField.getWidth()-5, getSlotY(0) + 60);
+        discountVolumeField.setPos(getEndPosX()-discountField.getWidth()-5, getSlotY(0) + 90);
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("shop.sell_button"), (button -> {
             sendSellRequest();
         })).width((int)(this.width*(1-MARGIN)-getSplitPosX()-10)).position(getSplitPosX()+5,(int)(this.height*(1-MARGIN))-BORDER_WIDTH-20).build());
-        ClientNetworkFunctions.requestGetWareStacksForVendorAndWait(vendorId);
-        playerInventory.player.sendMessage(Text.literal("offers: " + AtlasClient.wareStacks.size()));
     }
 
     private void sendSellRequest() {
         int amount = Integer.parseInt(amountField.getText());
         int price = Integer.parseInt(priceField.getText());
         int discount = Integer.parseInt(discountField.getText());
+        int discountVolume = Integer.parseInt(discountVolumeField.getText());
         if(activeSlot<0 || activeSlot>playerInventory.main.size())
             return;
         int itemId = Item.getRawId(playerInventory.main.get(activeSlot).getItem());
-        String response = ClientNetworkFunctions.requestSellItemsAndGetResponse(activeSlot, itemId, vendorId, amount, price, discount);
+        String response = ClientNetworkFunctions.requestSellItemsAndGetResponse(activeSlot, itemId, vendorId, amount, price, discount, discountVolume);
         playerInventory.removeStack(activeSlot, amount);
         activeSlot = -1;
     }
@@ -91,6 +93,12 @@ public class SellScreen extends Screen {
             int y = getSlotY(i);
             DrawableHelper.fill(matrices, x, y, x + 18, y + 18, 0x30000000);
         }
+
+        Rendering.text(matrices, Text.translatable("shop.count"), getSplitPosX()+5, amountField.getY()+3, BORDER_COLOR, BG_COLOR);
+        Rendering.text(matrices, Text.translatable("shop.price"), getSplitPosX()+5, priceField.getY()+3, BORDER_COLOR, BG_COLOR);
+        Rendering.text(matrices, Text.translatable("shop.discount"), getSplitPosX()+5, discountField.getY()+3, BORDER_COLOR, BG_COLOR);
+        Rendering.text(matrices, Text.translatable("shop.discount_volume"), getSplitPosX()+5, discountVolumeField.getY()+3, BORDER_COLOR, BG_COLOR);
+
 
         for(int i = 0;i<playerInventory.main.size();i++){
             int x = getSlotX(i);
@@ -159,6 +167,18 @@ public class SellScreen extends Screen {
                 discountField.setText("0");
             }
         }
+
+        if(!discountVolumeField.isFocused()) {
+            try{
+                int value = Integer.parseInt(discountVolumeField.getText());
+                if(value < 1)
+                    discountVolumeField.setText("1");
+                if(activeSlot < 0 || activeSlot >= playerInventory.main.size() || value > playerInventory.main.get(activeSlot).getCount())
+                    discountVolumeField.setText("1");
+            }catch (Exception e){
+                discountVolumeField.setText("1");
+            }
+        }
     }
 
     int getSlotX(int index) {
@@ -171,5 +191,9 @@ public class SellScreen extends Screen {
 
     int getSplitPosX() {
         return (int)(this.width*MARGIN + BORDER_WIDTH + COLUMNS*20 + BORDER_WIDTH);
+    }
+
+    int getEndPosX() {
+        return (int)(this.width*(1-MARGIN)-BORDER_WIDTH);
     }
 }

@@ -77,12 +77,24 @@ public class BuyScreen extends Screen {
             Rendering.text(matrices, Integer.toString(ws.count), textStartX + space*0.3f, textY, TEXT_COLOR, color);
             Rendering.text(matrices, Double.toString(ws.price), textStartX + space*0.4f, textY, TEXT_COLOR, color);
             Rendering.text(matrices, ws.price * (100 - ws.bulkDiscount) / 100 + "(" + ws.bulkDiscount + "%)", textStartX + space*0.5f, textY, TEXT_COLOR, color);
-            Rendering.text(matrices, "player name", textStartX + space*0.7f, textY, TEXT_COLOR, color);
+            Rendering.text(matrices, ws.playerName, textStartX + space*0.7f, textY, TEXT_COLOR, color);
         }
         buyButton.active = checkInputAndMoney();
         super.render(matrices, mouseX, mouseY, delta);
-        if(activeStack>=0)
-            Rendering.text(matrices, "/" + AtlasClient.wareStacks.get(activeStack).count, this.width*(1-MARGIN)-100-BORDER_WIDTH-18, getBuyPanelY()+11, BORDER_COLOR, BG_COLOR);
+        if(activeStack>=0) {
+            WareStack stack = AtlasClient.wareStacks.get(activeStack);
+            int amount;
+            try{
+                amount = Integer.parseInt(amountField.getText());
+            }catch (Exception e){
+                amount = 1;
+            }
+            double price = amount*(stack.price/stack.count);
+            if(amount>=stack.discountVolume)
+                price = price * (1-stack.bulkDiscount)/100;
+            Rendering.text(matrices, "/" + stack.count, this.width * (1 - MARGIN) - 100 - BORDER_WIDTH - 18, getBuyPanelY() + 11, BORDER_COLOR, BG_COLOR);
+            Rendering.text(matrices, "Buy " + amount + " for " + price + " Gold", this.width*MARGIN+BORDER_WIDTH, getBuyPanelY() + BORDER_WIDTH + 10, BORDER_COLOR, BG_COLOR);
+        }
 
         for(int i = getFirstStack(currentPage);i<AtlasClient.wareStacks.size() && i<getLastStack(currentPage);i++){
             float y = this.height * MARGIN + BORDER_WIDTH + i*ICON_SIZE;
@@ -104,6 +116,8 @@ public class BuyScreen extends Screen {
     }
 
     private void buyStack() {
+        if(!AtlasClient.wareStacks.contains(activeStack)) {
+        }
     }
 
     private void drawItem(ItemStack stack, float x, float y) {

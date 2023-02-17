@@ -27,7 +27,7 @@ public class AtlasClient implements ClientModInitializer {
 		KeyBindings.init();
 		ClientNetworkReceiver.registerListeners();
 		CustomScreens.registerHandledScreens();
-		wareStacks.add(new WareStack("sada", Items.ACACIA_BUTTON, 10, 10, 10, null));
+		wareStacks.add(new WareStack("sada", "test", Items.ACACIA_BUTTON, 10, 10, 10, 10, null));
 
 		ClientPlayConnectionEvents.JOIN.register(((handler, sender, client) -> {
 			ClientNetworkFunctions.syncSkills();

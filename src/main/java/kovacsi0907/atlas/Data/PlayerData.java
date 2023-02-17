@@ -1,7 +1,7 @@
 package kovacsi0907.atlas.Data;
 
-import kovacsi0907.atlas.Skills.Experience;
 import kovacsi0907.atlas.Skills.ExpType;
+import kovacsi0907.atlas.Skills.Experience;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ public class PlayerData {
     public List<String> unlockedSkills = new ArrayList<>();
     public List<Experience> overallExperienceList = new ArrayList<>();
     public List<Experience> experienceList = new ArrayList<>();
+    public double money = 0;
 
     public PlayerData(String uuid) {
         this.playerUUID = uuid;
@@ -22,6 +23,7 @@ public class PlayerData {
         playerCompound.put("unlockedSkills", createUnlockedSkillsCompound());
         playerCompound.put("overallExperience", createOverallExperienceCompound());
         playerCompound.put("experience", createExperienceCompound());
+        playerCompound.putDouble("money", money);
         return playerCompound;
     }
 
@@ -30,6 +32,7 @@ public class PlayerData {
         data.unlockedSkills = getUnlockedSkillsFromNbt(playerCompound.getCompound("unlockedSkills"));
         data.overallExperienceList = getOverallExperienceFromNbt(playerCompound.getCompound("overallExperience"));
         data.experienceList = getExperienceFromNbt(playerCompound.getCompound("experience"));
+        data.money = playerCompound.getDouble("money");
         return data;
     }
 

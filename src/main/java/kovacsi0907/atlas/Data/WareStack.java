@@ -11,40 +11,48 @@ import java.util.List;
 
 public class WareStack {
     String playerUuid;
+    public String playerName;
     String stackUuid;
-    Item item;
-    int count;
-    double price;
-    int bulkDiscount;
+    public Item item;
+    public int count;
+    public double price;
+    public int bulkDiscount;
+    public int discountVolume;
     List<String> vendorIds;
 
-    public WareStack(String playerUuid, Item item, int count, double price, int bulkDiscount, List<String> vendorIds) {
+    public WareStack(String playerUuid, String stackUuid, String playerName, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
         this.playerUuid = playerUuid;
-        this.stackUuid = new BigInteger(50, new SecureRandom()).toString(32).substring(0, 10);
-        this.item = item;
-        this.count = count;
-        this.price = price;
-        this. bulkDiscount = bulkDiscount;
-        this.vendorIds = vendorIds;
-    }
-
-    public WareStack(String playerUuid, String stackUuid, Item item, int count, double price, int bulkDiscount, List<String> vendorIds) {
-        this.playerUuid = playerUuid;
+        this.playerName = playerName;
         this.stackUuid = stackUuid;
         this.item = item;
         this.count = count;
         this.price = price;
         this. bulkDiscount = bulkDiscount;
+        this.discountVolume = discountVolume;
+        this.vendorIds = vendorIds;
+    }
+
+    public WareStack(String playerUuid, String playerName, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
+        this.playerUuid = playerUuid;
+        this.playerName = playerName;
+        this.stackUuid = new BigInteger(50, new SecureRandom()).toString(32).substring(0, 10);
+        this.item = item;
+        this.count = count;
+        this.price = price;
+        this. bulkDiscount = bulkDiscount;
+        this.discountVolume = discountVolume;
         this.vendorIds = vendorIds;
     }
 
     public NbtCompound createNbtCompound(){
         NbtCompound wareStackCompound = new NbtCompound();
         wareStackCompound.putString("uuid", playerUuid);
+        wareStackCompound.putString("playerName", playerName);
         wareStackCompound.putInt("itemId", Item.getRawId(item));
         wareStackCompound.putInt("count", count);
         wareStackCompound.putDouble("price", price);
         wareStackCompound.putInt("bulkDiscount", bulkDiscount);
+        wareStackCompound.putInt("discountVolume", discountVolume);
         NbtCompound vendorsCompound = new NbtCompound();
         for(String vendorId : vendorIds)
             vendorsCompound.putString(vendorId, vendorId);
@@ -55,30 +63,36 @@ public class WareStack {
     public static WareStack createFromNbt(NbtCompound wareStackCompound) {
         List<String> vendors = (List<String>) wareStackCompound.getCompound("vendors").getKeys();
         return new WareStack(wareStackCompound.getString("uuid"),
+                wareStackCompound.getString("playerName"),
                 Item.byRawId(wareStackCompound.getInt("itemId")),
                 wareStackCompound.getInt("count"),
                 wareStackCompound.getInt("price"),
                 wareStackCompound.getInt("bulkDiscount"),
+                wareStackCompound.getInt("discountVolume"),
                 vendors);
     }
 
     public PacketByteBuf createPacket(){
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeString(playerUuid);
+        buffer.writeString(playerName);
         buffer.writeString(stackUuid);
         buffer.writeInt(Item.getRawId(item));
         buffer.writeInt(count);
         buffer.writeDouble(price);
         buffer.writeInt(bulkDiscount);
+        buffer.writeInt(discountVolume);
         return buffer;
     }
 
     public static WareStack fromPacket(PacketByteBuf buffer) {
         return new WareStack(buffer.readString(),
                 buffer.readString(),
+                buffer.readString(),
                 Item.byRawId(buffer.readInt()),
                 buffer.readInt(),
                 buffer.readDouble(),
+                buffer.readInt(),
                 buffer.readInt(),
                 null);
     }

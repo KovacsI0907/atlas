@@ -31,7 +31,7 @@ public abstract class ClientNetworkFunctions {
         TrackedNetworkReciever.trackAndWait(Channels.REQUEST_GET_WARESTACKS, 20, 1000);
     }
 
-    public static String requestSellItemsAndGetResponse(int slot, int itemId, String vendorId, int amount, int price, int discount) {
+    public static String requestSellItemsAndGetResponse(int slot, int itemId, String vendorId, int amount, int price, int discount, int discountVolume) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeInt(slot);
         buffer.writeInt(itemId);
@@ -39,6 +39,7 @@ public abstract class ClientNetworkFunctions {
         buffer.writeInt(amount);
         buffer.writeInt(price);
         buffer.writeInt(discount);
+        buffer.writeInt(discountVolume);
         ClientPlayNetworking.send(Channels.REQUEST_SELL_ITEMS, buffer);
         TrackedNetworkReciever.trackAndWait(Channels.REQUEST_SELL_ITEMS, 20, 1000);
         String response = AtlasClient.sellResponse;
