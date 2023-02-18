@@ -10,9 +10,9 @@ import java.security.SecureRandom;
 import java.util.List;
 
 public class WareStack {
-    String playerUuid;
+    public String playerUuid;
     public String playerName;
-    String stackUuid;
+    public String stackUuid;
     public Item item;
     public int count;
     public double price;

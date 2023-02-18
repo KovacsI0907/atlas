@@ -14,7 +14,7 @@ import java.util.List;
 public class ServerData extends PersistentState {
 
     public HashMap<String, PlayerData> playerData = new HashMap<>();
-    public List<WareStack> wareStacks = new ArrayList<>();
+    public HashMap<String, WareStack> wareStacks = new HashMap<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -25,9 +25,12 @@ public class ServerData extends PersistentState {
         nbt.put("playerData", playerDataCompound);
 
         NbtCompound wareStacksCompound = new NbtCompound();
-        for(WareStack stack : wareStacks){
+        wareStacks.forEach(((s, wareStack) -> {
+            wareStacksCompound.put(s, wareStack.createNbtCompound());
+        }));
+        /*for(WareStack stack : wareStacks){
             wareStacksCompound.put(stack.stackUuid ,stack.createNbtCompound());
-        }
+        }*/
         nbt.put("wareStacks", wareStacksCompound);
         return nbt;
     }
@@ -40,8 +43,8 @@ public class ServerData extends PersistentState {
         });
 
         NbtCompound wareStacksCompound = mainCompound.getCompound("wareStacks");
-        wareStacksCompound.getKeys().forEach((uuid) -> {
-            serverData.wareStacks.add(WareStack.createFromNbt(wareStacksCompound.getCompound(uuid)));
+        wareStacksCompound.getKeys().forEach((stackId) -> {
+            serverData.wareStacks.put(stackId, WareStack.createFromNbt(wareStacksCompound.getCompound(stackId)));
         });
 
         return serverData;
@@ -69,10 +72,15 @@ public class ServerData extends PersistentState {
     public static List<WareStack> getWareStacksForVendor(MinecraftServer server, String vendorId){
         ServerData serverData = getServerData(server);
         List<WareStack> matching = new ArrayList<>();
-        for(WareStack wareStack : serverData.wareStacks){
+        serverData.wareStacks.forEach(((s, wareStack) -> {
+            if(wareStack.vendorIds.contains(vendorId)){
+                matching.add(wareStack);
+            }
+        }));
+        /*for(WareStack wareStack : serverData.wareStacks){
             if(wareStack.vendorIds.contains(vendorId))
                 matching.add(wareStack);
-        }
+        }*/
         return matching;
     }
 }

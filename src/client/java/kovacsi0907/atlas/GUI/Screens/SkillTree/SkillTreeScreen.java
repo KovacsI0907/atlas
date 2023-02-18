@@ -1,6 +1,6 @@
 package kovacsi0907.atlas.GUI.Screens.SkillTree;
 
-import kovacsi0907.atlas.AtlasClient;
+import kovacsi0907.atlas.ClientData;
 import kovacsi0907.atlas.GUI.Pos2;
 import kovacsi0907.atlas.GUI.Rendering;
 import kovacsi0907.atlas.Network.ClientNetworkFunctions;
@@ -137,7 +137,7 @@ public abstract class SkillTreeScreen extends Screen {
     }
 
     boolean hasSkill(Skill skill){
-        return AtlasClient.skills.contains(skill.id);
+        return ClientData.skills.contains(skill.id);
     }
 
     SkillButtonWidget createButton(Pos2 pos, Identifier texture, Skill skill) {
@@ -160,7 +160,7 @@ public abstract class SkillTreeScreen extends Screen {
     }
 
     int getXPNeeded(ExpType type, int needed){
-        for(Experience exp : AtlasClient.experienceList){
+        for(Experience exp : ClientData.experienceList){
             if(exp.type == type)
                 if(needed-exp.points>0)
                     return needed-exp.points;

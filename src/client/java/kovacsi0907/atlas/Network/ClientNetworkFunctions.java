@@ -1,6 +1,6 @@
 package kovacsi0907.atlas.Network;
 
-import kovacsi0907.atlas.AtlasClient;
+import kovacsi0907.atlas.ClientData;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
@@ -42,8 +42,20 @@ public abstract class ClientNetworkFunctions {
         buffer.writeInt(discountVolume);
         ClientPlayNetworking.send(Channels.REQUEST_SELL_ITEMS, buffer);
         TrackedNetworkReciever.trackAndWait(Channels.REQUEST_SELL_ITEMS, 20, 1000);
-        String response = AtlasClient.sellResponse;
-        AtlasClient.sellResponse = "";
+        String response = ClientData.sellResponse;
+        ClientData.sellResponse = "";
+        return response;
+    }
+
+    public static String buyStackAndWait(String stackUuid, int count, String vendorId) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeString(stackUuid);
+        buffer.writeInt(count);
+        buffer.writeString(vendorId);
+        ClientPlayNetworking.send(Channels.BUY_STACK,buffer);
+        TrackedNetworkReciever.trackAndWait(Channels.BUY_STACK, 20, 1000);
+        String response = ClientData.buyResponse;
+        ClientData.buyResponse = "";
         return response;
     }
 }

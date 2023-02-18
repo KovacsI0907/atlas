@@ -40,7 +40,7 @@ public abstract class ServerNetworkReceiver {
             if(Item.getRawId(stack.getItem()) == itemId && stack.getCount() >= amount){
                 player.getInventory().removeStack(slot, amount);
                 player.getInventory().markDirty();
-                ServerData.getServerData(server).wareStacks.add(new WareStack(
+                WareStack ws = new WareStack(
                         player.getUuidAsString(),
                         player.getGameProfile().getName(),
                         Item.byRawId(itemId),
@@ -49,7 +49,8 @@ public abstract class ServerNetworkReceiver {
                         discount,
                         discountVolume,
                         Arrays.stream(new String[]{vendorId}).toList()
-                ));
+                );
+                ServerData.getServerData(server).wareStacks.put(ws.stackUuid, ws);
                 response = "success";
             }
 
@@ -59,6 +60,10 @@ public abstract class ServerNetworkReceiver {
 
         ServerPlayNetworking.registerGlobalReceiver(Channels.GET_MONEY, ((server, player, handler, buf, responseSender) -> {
             ServerNetworkFunctions.sendMoney(server, player);
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(Channels.BUY_STACK, ((server, player, handler, buf, responseSender) -> {
+            ServerNetworkFunctions.sendBuyStackResponse(server, player, buf.readString(), buf.readInt(), buf.readString());
         }));
     }
 

@@ -1,8 +1,20 @@
 {
-"skills.bronze_weapon_smithing.name" : "Bronze weapon smithing",
-"skills.bronze_weapon_smithing.description" : "Allows you to craft weapons out of bronze",
-"skills.iron_weapon_smithing.name" : "Iron weapon smithing",
-"skills.iron_weapon_smithing.description" : "Allows you to craft weapons out of iron",
-"skills.experience_needed" : "Unlockable at %dXP (%dXP left)",
-"skills.unlock_button" : "Unlock"
+  "skills.bronze_weapon_smithing.name" : "Bronze weapon smithing",
+  "skills.bronze_weapon_smithing.description" : "Allows you to craft weapons out of bronze",
+  "skills.iron_weapon_smithing.name" : "Iron weapon smithing",
+  "skills.iron_weapon_smithing.description" : "Allows you to craft weapons out of iron",
+  "skills.experience_needed" : "Unlockable at %dXP (%dXP left)",
+  "skills.unlock_button" : "Unlock",
+  "shop.count" : "Amount",
+  "shop.price" : "Price",
+  "shop.discount" : "Discount",
+  "shop.discount_volume" : "Discount from",
+  "shop.sell_button" : "Sell",
+  "shop.item_name" : "Item name",
+  "shop.buy.item_name" : "Amount",
+  "shop.buy.amount" : "amt",
+  "shop.buy.price" : "pr",
+  "shop.buy.discount" : "disc.",
+  "shop.buy.discount_volume" : "disc.from",
+  "shop.buy.player" : "Player"
 }

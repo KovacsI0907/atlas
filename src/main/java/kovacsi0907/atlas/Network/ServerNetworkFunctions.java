@@ -8,6 +8,7 @@ import kovacsi0907.atlas.Skills.Skill;
 import kovacsi0907.atlas.Skills.Skills;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -78,5 +79,32 @@ public final class ServerNetworkFunctions {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeDouble(ServerData.getOrCreatePlayerData(server, player.getUuidAsString()).money);
         ServerPlayNetworking.send(player, Channels.GET_MONEY, buffer);
+    }
+
+    public static void sendBuyStackResponse(MinecraftServer server, ServerPlayerEntity player, String stackId, int amount, String vendorId) {
+        ServerData serverData = ServerData.getServerData(server);
+        if(!serverData.wareStacks.containsKey(stackId)){
+            ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("stack_not_found"));
+            return;
+        }
+        WareStack stack = serverData.wareStacks.get(stackId);
+        if(amount<=0 || amount>stack.count){
+            ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("invalid_amount"));
+            return;
+        }
+        double price = (stack.price/stack.count)*amount;
+        if(amount>=stack.discountVolume)
+            price = price*(100-stack.bulkDiscount)/100;
+        double money = ServerData.getOrCreatePlayerData(server, player.getUuidAsString()).money;
+        if(money < price){
+            ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("not_enough_money"));
+            return;
+        }
+        if(player.getInventory().insertStack(new ItemStack(stack.item, amount))){
+            player.getInventory().markDirty();
+            ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("success"));
+        }else{
+            ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("not_enough_room"));
+        }
     }
 }

@@ -10,4 +10,5 @@ public class Channels {
     public static final Identifier REQUEST_GET_WARESTACKS = new Identifier(Atlas.MOD_ID, "request_get_warestacks");
     public static final Identifier REQUEST_SELL_ITEMS = new Identifier(Atlas.MOD_ID, "request_sell_items");
     public static final Identifier GET_MONEY = new Identifier(Atlas.MOD_ID, "get_money");
+    public static final Identifier BUY_STACK = new Identifier(Atlas.MOD_ID, "buy_stack");
 }

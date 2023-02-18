@@ -25,7 +25,7 @@ final class KeyBindings {
                 client.setScreen(new SellScreen(Text.literal("Shop"), "test_vendor", MinecraftClient.getInstance().player.getInventory()));
             }
             while(TESTKEY_K.wasPressed()){
-                client.setScreen(new BuyScreen(Text.literal("Shop"), "test_vendor"));
+                client.setScreen(new BuyScreen(Text.literal("Shop"), "test_vendor", MinecraftClient.getInstance().player.getInventory()));
             }
         });
     }
