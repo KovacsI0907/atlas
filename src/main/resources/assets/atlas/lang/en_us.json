@@ -16,5 +16,8 @@
   "shop.buy.price" : "pr",
   "shop.buy.discount" : "disc.",
   "shop.buy.discount_volume" : "disc.from",
-  "shop.buy.player" : "Player"
+  "shop.buy.player" : "Player",
+  "item.atlas.tin_ingot" : "Tin ingot",
+  "item.atlas.bubi_kardja" : "Bubi kardja",
+  "item.atlas.steel_ingot" : "Steel ingot"
 }
