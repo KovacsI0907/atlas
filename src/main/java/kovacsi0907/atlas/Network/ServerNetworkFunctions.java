@@ -13,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class ServerNetworkFunctions {
@@ -65,13 +66,25 @@ public final class ServerNetworkFunctions {
         sendExperiencePacket(player, server);
     }
 
-    public static void sendWareStacksPacket(ServerPlayerEntity player, MinecraftServer server, String vendorId) {
-        List<WareStack> wareStacks = ServerData.getWareStacksForVendor(server, vendorId);
+    public static void sendWareStacksPacket(ServerPlayerEntity player, MinecraftServer server, String vendorId, int from, int howMany) {
+        List<WareStack> allStacks = ServerData.getWareStacksForVendor(server, vendorId);
+        List<WareStack> toSend = new ArrayList<>();
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeInt(wareStacks.size());
-        for(WareStack stack : wareStacks){
-            buffer.writeBytes(stack.createPacket());
+        if(from > allStacks.size() || howMany<=0) {
+            buffer.writeInt(0);
+            ServerPlayNetworking.send(player, Channels.REQUEST_GET_WARESTACKS, buffer);
+            return;
         }
+
+        int to = from + howMany;
+        if(to > allStacks.size())
+            to = allStacks.size();
+        for(int i = from;i<to;i++){
+            toSend.add(allStacks.get(i));
+        }
+        buffer.writeInt(toSend.size());
+        for (WareStack wareStack : toSend)
+            buffer.writeBytes(wareStack.createPacket());
         ServerPlayNetworking.send(player, Channels.REQUEST_GET_WARESTACKS, buffer);
     }
 
@@ -102,6 +115,11 @@ public final class ServerNetworkFunctions {
         }
         if(player.getInventory().insertStack(new ItemStack(stack.item, amount))){
             player.getInventory().markDirty();
+            ServerData.getOrCreatePlayerData(server, player.getUuidAsString()).money -= price;
+            serverData.wareStacks.get(stackId).count-=amount;
+            if(serverData.wareStacks.get(stackId).count <= 0)
+                serverData.wareStacks.remove(stackId);
+            ServerData.getOrCreatePlayerData(server, stack.playerUuid).money += price;
             ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("success"));
         }else{
             ServerPlayNetworking.send(player, Channels.BUY_STACK, PacketByteBufs.create().writeString("not_enough_room"));

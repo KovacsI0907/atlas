@@ -11,7 +11,6 @@ import java.util.List;
 
 public class WareStack {
     public String playerUuid;
-    public String playerName;
     public String stackUuid;
     public Item item;
     public int count;
@@ -20,9 +19,8 @@ public class WareStack {
     public int discountVolume;
     List<String> vendorIds;
 
-    public WareStack(String playerUuid, String stackUuid, String playerName, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
+    public WareStack(String playerUuid, String stackUuid, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
         this.playerUuid = playerUuid;
-        this.playerName = playerName;
         this.stackUuid = stackUuid;
         this.item = item;
         this.count = count;
@@ -32,10 +30,9 @@ public class WareStack {
         this.vendorIds = vendorIds;
     }
 
-    public WareStack(String playerUuid, String playerName, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
+    public WareStack(String playerUuid, Item item, int count, double price, int bulkDiscount, int discountVolume, List<String> vendorIds) {
         this.playerUuid = playerUuid;
-        this.playerName = playerName;
-        this.stackUuid = new BigInteger(50, new SecureRandom()).toString(32).substring(0, 10);
+        this.stackUuid = getNewUuid();
         this.item = item;
         this.count = count;
         this.price = price;
@@ -44,10 +41,17 @@ public class WareStack {
         this.vendorIds = vendorIds;
     }
 
+    String getNewUuid() {
+        String s;
+        do{
+            s = new BigInteger(50, new SecureRandom()).toString(32);
+        }while(s.length()<10);
+        return s.substring(0,10);
+    }
+
     public NbtCompound createNbtCompound(){
         NbtCompound wareStackCompound = new NbtCompound();
         wareStackCompound.putString("uuid", playerUuid);
-        wareStackCompound.putString("playerName", playerName);
         wareStackCompound.putInt("itemId", Item.getRawId(item));
         wareStackCompound.putInt("count", count);
         wareStackCompound.putDouble("price", price);
@@ -75,7 +79,6 @@ public class WareStack {
     public PacketByteBuf createPacket(){
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeString(playerUuid);
-        buffer.writeString(playerName);
         buffer.writeString(stackUuid);
         buffer.writeInt(Item.getRawId(item));
         buffer.writeInt(count);
@@ -87,7 +90,6 @@ public class WareStack {
 
     public static WareStack fromPacket(PacketByteBuf buffer) {
         return new WareStack(buffer.readString(),
-                buffer.readString(),
                 buffer.readString(),
                 Item.byRawId(buffer.readInt()),
                 buffer.readInt(),

@@ -24,7 +24,7 @@ public abstract class ServerNetworkReceiver {
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(Channels.REQUEST_GET_WARESTACKS, (((server, player, handler, buf, responseSender) -> {
-            ServerNetworkFunctions.sendWareStacksPacket(player, server, buf.readString());
+            ServerNetworkFunctions.sendWareStacksPacket(player, server, buf.readString(), buf.readInt(), buf.readInt());
         })));
 
         ServerPlayNetworking.registerGlobalReceiver(Channels.REQUEST_SELL_ITEMS, ((server, player, handler, buf, responseSender) -> {
@@ -42,7 +42,6 @@ public abstract class ServerNetworkReceiver {
                 player.getInventory().markDirty();
                 WareStack ws = new WareStack(
                         player.getUuidAsString(),
-                        player.getGameProfile().getName(),
                         Item.byRawId(itemId),
                         amount,
                         price,

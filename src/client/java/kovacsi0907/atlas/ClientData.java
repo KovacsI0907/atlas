@@ -13,4 +13,5 @@ public final class ClientData {
     public static List<WareStack> wareStacks = new ArrayList<>();
     public static String sellResponse = "";
     public static String buyResponse = "";
+    public static double money = 0;
 }

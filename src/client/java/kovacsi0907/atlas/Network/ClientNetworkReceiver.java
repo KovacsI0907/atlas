@@ -41,6 +41,11 @@ public abstract class ClientNetworkReceiver {
             TrackedNetworkReciever.receive(Channels.REQUEST_SELL_ITEMS);
         }));
 
+        ClientPlayNetworking.registerGlobalReceiver(Channels.GET_MONEY, ((client, handler, buf, responseSender) -> {
+            ClientData.money = buf.readDouble();
+            TrackedNetworkReciever.receive(Channels.GET_MONEY);
+        }));
+
         ClientPlayNetworking.registerGlobalReceiver(Channels.BUY_STACK, (((client, handler, buf, responseSender) -> {
             ClientData.buyResponse = buf.readString();
             TrackedNetworkReciever.receive(Channels.BUY_STACK);

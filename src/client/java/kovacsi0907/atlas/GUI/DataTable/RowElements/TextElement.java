@@ -33,7 +33,6 @@ public class TextElement extends RowElement {
         this.horizontallyCentered = horizontallyCentered;
         this.text = text;
     }
-
     @Override
     public void render(DataTable table, MatrixStack matrices, int x, int y, int height, int rowIndex, boolean selected, boolean mouseOver) {
         int textX = x;

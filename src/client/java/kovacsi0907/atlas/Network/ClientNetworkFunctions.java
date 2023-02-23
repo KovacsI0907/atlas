@@ -20,14 +20,16 @@ public abstract class ClientNetworkFunctions {
         ClientPlayNetworking.send(Channels.REQUEST_GET_SKILL_PACKET, buffer);
     }
 
-    public static void requestGetWareStacksForVendor(String vendorId) {
+    public static void requestGetWareStacksForVendor(String vendorId, int from, int howMany) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeString(vendorId);
+        buffer.writeInt(from);
+        buffer.writeInt(howMany);
         ClientPlayNetworking.send(Channels.REQUEST_GET_WARESTACKS, buffer);
     }
 
-    public static void requestGetWareStacksForVendorAndWait(String vendorId){
-        requestGetWareStacksForVendor(vendorId);
+    public static void requestGetWareStacksForVendorAndWait(String vendorId, int from, int howMany){
+        requestGetWareStacksForVendor(vendorId, from, howMany);
         TrackedNetworkReciever.trackAndWait(Channels.REQUEST_GET_WARESTACKS, 20, 1000);
     }
 
@@ -45,6 +47,11 @@ public abstract class ClientNetworkFunctions {
         String response = ClientData.sellResponse;
         ClientData.sellResponse = "";
         return response;
+    }
+
+    public static void requestGetMoneyAndWait() {
+        ClientPlayNetworking.send(Channels.GET_MONEY, PacketByteBufs.empty());
+        TrackedNetworkReciever.trackAndWait(Channels.GET_MONEY, 20, 1000);
     }
 
     public static String buyStackAndWait(String stackUuid, int count, String vendorId) {

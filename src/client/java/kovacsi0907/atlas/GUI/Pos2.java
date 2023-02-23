@@ -8,4 +8,8 @@ public class Pos2 {
         this.x = x;
         this.y = y;
     }
+
+    public Pos2() {
+        this(0,0);
+    }
 }

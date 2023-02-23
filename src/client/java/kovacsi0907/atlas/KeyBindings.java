@@ -22,10 +22,10 @@ final class KeyBindings {
                 client.setScreen(new SmithingSkillTreeScreen(Text.of("Smithing")));
             }
             while (TESTKEY_J.wasPressed()){
-                client.setScreen(new SellScreen(Text.literal("Shop"), "test_vendor", MinecraftClient.getInstance().player.getInventory()));
+                client.setScreen(new SellScreen(Text.empty(), "test_vendor", MinecraftClient.getInstance().player.getInventory()));
             }
             while(TESTKEY_K.wasPressed()){
-                client.setScreen(new BuyScreen(Text.literal("Shop"), "test_vendor", MinecraftClient.getInstance().player.getInventory()));
+                client.setScreen(new BuyScreen(Text.literal("BUY"),"test_vendor"));
             }
         });
     }
