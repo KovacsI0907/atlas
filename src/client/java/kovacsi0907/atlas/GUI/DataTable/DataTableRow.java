@@ -29,13 +29,13 @@ public class DataTableRow {
 
     public void render(DataTable table, MatrixStack matrices,int y, int rowIndex, int mouseX, int mouseY, boolean selected) {
         int bgColor = table.bgColor;
-        if(rowIndex%2 == 0)
-            bgColor -= 0x00101010;
-        if(isMouseOver(mouseX, mouseY, table.x, y, table.width))
-            bgColor -= 0x00101010;
         if(selected)
             bgColor = table.activeBgColor;
         DrawableHelper.fill(matrices, table.x,y,table.x+table.width, y+height, bgColor);
+        if(rowIndex%2 == 0 && !selected)
+            DrawableHelper.fill(matrices, table.x,y,table.x+table.width, y+height, 0x30000000);
+        if(isMouseOver(mouseX, mouseY, table.x, y, table.width) && !selected)
+            DrawableHelper.fill(matrices, table.x,y,table.x+table.width, y+height, 0x30000000);
         for(int  i = 0;i<elements.size();i++){
             elements.get(i).render(
                     table,

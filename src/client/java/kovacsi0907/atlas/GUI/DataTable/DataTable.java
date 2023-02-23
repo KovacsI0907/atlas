@@ -18,11 +18,13 @@ public class DataTable {
     public int gridColor;
     public boolean drawGrid;
 
-    int height;
-    int width;
-    int x;
-    int y;
-    int selectedRow;
+    public int height;
+    public int width;
+    public int x;
+    public int y;
+    public int selectedRow;
+
+    public DataTableRow headerRow = null;
 
     public DataTable(ItemRenderer itemRenderer, TextRenderer textRenderer, int textColor, int bgColor, int activeBgColor, int gridColor, boolean drawGrid, int height, int width, int x, int y) {
         this.itemRenderer = itemRenderer;
@@ -47,6 +49,10 @@ public class DataTable {
 
     public void render(MatrixStack matrices, int mouseX, int mouseY){
         int currentY = this.y;
+        if(headerRow!=null){
+            headerRow.render(this, matrices, currentY, -1, mouseX, mouseY, false);
+            currentY+=headerRow.height;
+        }
         for(int i = 0;i<this.rows.size();i++){
             this.rows.get(i).render(this, matrices, currentY, i, mouseX, mouseY, i == selectedRow);
             currentY += this.rows.get(i).height;
@@ -54,7 +60,7 @@ public class DataTable {
     }
 
     public void onClick(int mouseX, int mouseY){
-        int currentY = this.y;
+        int currentY = this.y+((headerRow==null)?0:headerRow.height);
         for(int i = 0;i<this.rows.size();i++){
             if(this.rows.get(i).isMouseOver(mouseX,mouseY, this.x, currentY, this.width)){
                 selectedRow = i;

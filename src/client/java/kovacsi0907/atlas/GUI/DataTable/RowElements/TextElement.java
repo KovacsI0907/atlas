@@ -43,10 +43,6 @@ public class TextElement extends RowElement {
             this.width = textWidth;
         int alteredBgColor = table.bgColor;
 
-        if(rowIndex%2==0)
-            alteredBgColor -= 0x00101010;
-        if(mouseOver)
-            alteredBgColor -= 0x00101010;
         if(selected)
             alteredBgColor = table.activeBgColor;
 
@@ -59,8 +55,13 @@ public class TextElement extends RowElement {
                 textX += (width-textWidth)/2;
         }
 
-        if(drawBackground)
-            DrawableHelper.fill(matrices, x,y,x+textWidth, y+height, alteredBgColor);
+        if(drawBackground) {
+            DrawableHelper.fill(matrices, x, y, x + textWidth, y + height, alteredBgColor);
+            if(rowIndex%2==0 && !selected)
+                DrawableHelper.fill(matrices, x, y, x + textWidth, y + height, 0x30000000);
+            if(mouseOver && !selected)
+                DrawableHelper.fill(matrices, x, y, x + textWidth, y + height, 0x30000000);
+        }
 
         table.textRenderer.draw(matrices, this.text, textX, textY, table.textColor);
     }
