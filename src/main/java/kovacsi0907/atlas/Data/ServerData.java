@@ -28,14 +28,13 @@ public class ServerData extends PersistentState {
         wareStacks.forEach(((s, wareStack) -> {
             wareStacksCompound.put(s, wareStack.createNbtCompound());
         }));
-        /*for(WareStack stack : wareStacks){
-            wareStacksCompound.put(stack.stackUuid ,stack.createNbtCompound());
-        }*/
         nbt.put("wareStacks", wareStacksCompound);
         return nbt;
     }
 
     public static ServerData createFromNbt(NbtCompound mainCompound){
+        for(String key : mainCompound.getKeys())
+            System.out.println(">>> " + key);
         ServerData serverData = new ServerData();
         NbtCompound playerDataCompound = mainCompound.getCompound("playerData");
         playerDataCompound.getKeys().forEach((uuid) ->{
@@ -46,7 +45,7 @@ public class ServerData extends PersistentState {
         wareStacksCompound.getKeys().forEach((stackId) -> {
             serverData.wareStacks.put(stackId, WareStack.createFromNbt(wareStacksCompound.getCompound(stackId)));
         });
-
+        System.out.println("LOADEDEDEDEED");
         return serverData;
     }
 
@@ -77,10 +76,6 @@ public class ServerData extends PersistentState {
                 matching.add(wareStack);
             }
         }));
-        /*for(WareStack wareStack : serverData.wareStacks){
-            if(wareStack.vendorIds.contains(vendorId))
-                matching.add(wareStack);
-        }*/
         return matching;
     }
 }

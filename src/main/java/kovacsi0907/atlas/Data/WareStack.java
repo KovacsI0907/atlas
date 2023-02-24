@@ -7,6 +7,7 @@ import net.minecraft.network.PacketByteBuf;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WareStack {
@@ -65,7 +66,7 @@ public class WareStack {
     }
 
     public static WareStack createFromNbt(NbtCompound wareStackCompound) {
-        List<String> vendors = (List<String>) wareStackCompound.getCompound("vendors").getKeys();
+        List<String> vendors = new ArrayList<>(wareStackCompound.getCompound("vendors").getKeys());
         return new WareStack(wareStackCompound.getString("uuid"),
                 wareStackCompound.getString("playerName"),
                 Item.byRawId(wareStackCompound.getInt("itemId")),
