@@ -50,9 +50,11 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
     public boolean matches(SimpleInventory craftingInventory, World world) {
         if(world.isClient())
             return false;
-
         for(int i = 0;i< recipeItems.size();i++){
-            if(!recipeItems.get(i).test(craftingInventory.getStack(i)))
+            int x = i%3;
+            int y = i/3;
+            int invIndex = 3*x + y;
+            if(!recipeItems.get(i).test(craftingInventory.getStack(invIndex)))
                 return false;
         }
 

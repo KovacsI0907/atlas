@@ -2,16 +2,16 @@
   "type": "atlas:custom_smithing",
   "ingredients": [
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:iron_ingot"
     },
     {
-      "item": "minecraft:oak_log"
+      "item": "minecraft:stick"
     }
   ],
   "pattern": [
-    1,0,0,
-    0,0,0,
-    0,0,0
+    0,1,0,
+    0,1,0,
+    0,2,0
   ],
   "time": 20,
   "result": {
