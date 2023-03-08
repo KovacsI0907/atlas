@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "atlas:silver_ore",
+	"atlas:tin_ore"
+  ]
+}

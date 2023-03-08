@@ -1,0 +1,5 @@
+{ "parent": "block/cube_all",
+  "textures": {
+    "all": "atlas:block/silver_ore"
+  }
+}
