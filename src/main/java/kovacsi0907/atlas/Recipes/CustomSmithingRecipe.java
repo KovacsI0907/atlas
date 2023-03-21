@@ -19,6 +19,8 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
     private final Identifier id;
     private final ItemStack result;
     private final DefaultedList<Ingredient> recipeItems;
+    public final DefaultedList<Integer> itemCounts;
+    public final boolean allSkillsNecessary;
 
     public List<String> getSkillsNeeded() {
         return skillsNeeded;
@@ -37,11 +39,13 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
     private final int xpGain;
     private final int timeToMake;
 
-    private CustomSmithingRecipe(Identifier id, ItemStack result, DefaultedList<Ingredient> recipeItems, List<String> skillsNeeded, int xpGain, int timeToMake) {
+    private CustomSmithingRecipe(Identifier id, ItemStack result, DefaultedList<Ingredient> recipeItems, DefaultedList<Integer> itemCounts, List<String> skillsNeeded, boolean allSkillsNecessary, int xpGain, int timeToMake) {
         this.id = id;
         this.result = result;
         this.recipeItems = recipeItems;
+        this.itemCounts = itemCounts;
         this.skillsNeeded = skillsNeeded;
+        this.allSkillsNecessary = allSkillsNecessary;
         this.xpGain = xpGain;
         this.timeToMake = timeToMake;
     }
@@ -54,7 +58,9 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
             int x = i%3;
             int y = i/3;
             int invIndex = 3*x + y;
-            if(!recipeItems.get(i).test(craftingInventory.getStack(invIndex)))
+            ItemStack stack = craftingInventory.getStack(invIndex);
+            boolean enough = recipeItems.get(i).isEmpty() || stack.getCount() >= itemCounts.get(i);
+            if(!recipeItems.get(i).test(stack) || !enough)
                 return false;
         }
 
@@ -115,20 +121,35 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
                     continue;
                 input.set(i, ingredients.get(pattern.get(i).getAsInt()-1));
             }
+
+            DefaultedList<Integer> itemCounts = DefaultedList.ofSize(9, 1);
+            try{
+                JsonArray counts = JsonHelper.getArray(json, "counts");
+                for(int i = 0;i<input.size();i++){
+                    itemCounts.set(i, counts.get(i).getAsInt());
+                }
+            }catch (Exception ignored){}
             List<String> skillsNeeded = new ArrayList<>();
             try{
                 JsonArray skillJsonArray = JsonHelper.getArray(json, "skills_needed");
                 for(JsonElement element : skillJsonArray)
                     skillsNeeded.add(element.getAsString());
             }catch (Exception ignored){}
-
-            return new CustomSmithingRecipe(id, result, input, skillsNeeded, JsonHelper.getInt(json, "xp"), JsonHelper.getInt(json, "time"));
+            boolean allSkillsNecessary = false;
+            try{
+                allSkillsNecessary = JsonHelper.getObject(json, "all_skills_necessary").getAsBoolean();
+            }catch (Exception ignored){}
+            return new CustomSmithingRecipe(id, result, input, itemCounts, skillsNeeded, allSkillsNecessary, JsonHelper.getInt(json, "xp"), JsonHelper.getInt(json, "time"));
         }
 
         @Override
         public CustomSmithingRecipe read(Identifier id, PacketByteBuf buf) {
             DefaultedList<Ingredient> recipeItems = DefaultedList.ofSize(buf.readInt(), Ingredient.EMPTY);
             recipeItems.replaceAll(ignored -> Ingredient.fromPacket(buf));
+            DefaultedList<Integer> itemCounts = DefaultedList.ofSize(9, 1);
+            for(int i = 0;i<buf.readInt();i++){
+                itemCounts.set(i, buf.readInt());
+            }
             int xpGain = buf.readInt();
             int timeToMake = buf.readInt();
             ItemStack result = buf.readItemStack();
@@ -136,8 +157,9 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
             for(int i = buf.readInt();i>0;i--){
                 skillsNeeded.add(buf.readString());
             }
+            boolean allSkillsNecessary = buf.readBoolean();
 
-            return new CustomSmithingRecipe(id, result, recipeItems, skillsNeeded, xpGain, timeToMake);
+            return new CustomSmithingRecipe(id, result, recipeItems, itemCounts, skillsNeeded, allSkillsNecessary, xpGain, timeToMake);
         }
 
         @Override
@@ -146,6 +168,10 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
             for(Ingredient input : recipe.recipeItems){
                 input.write(buf);
             }
+            buf.writeInt(recipe.itemCounts.size());
+            for(Integer count : recipe.itemCounts){
+                buf.writeInt(count);
+            }
             buf.writeInt(recipe.xpGain);
             buf.writeInt(recipe.timeToMake);
             buf.writeItemStack(recipe.getOutput());
@@ -153,6 +179,7 @@ public class CustomSmithingRecipe implements Recipe<SimpleInventory> {
             for(String skill : recipe.skillsNeeded){
                 buf.writeString(skill);
             }
+            buf.writeBoolean(recipe.allSkillsNecessary);
         }
     }
 }

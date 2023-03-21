@@ -1,0 +1,21 @@
+{
+  "type": "atlas:custom_smithing",
+  "ingredients": [
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "pattern": [
+    2,0,0,
+    0,0,0,
+    0,0,0
+  ],
+  "time": 20,
+  "result": {
+    "item": "minecraft:bedrock"
+  },
+  "xp": 10
+}

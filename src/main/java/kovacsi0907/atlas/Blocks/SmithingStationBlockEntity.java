@@ -109,7 +109,7 @@ public class SmithingStationBlockEntity extends BlockEntity implements NamedScre
 
         CustomSmithingRecipe recipe = getRecipe(entity);
         if(recipe != null){
-            if(entity.lastInteractingPlayer != null && hasSkill(entity.lastInteractingPlayer, recipe.getSkillsNeeded())) {
+            if(entity.lastInteractingPlayer != null && hasSkills(entity.lastInteractingPlayer, recipe.getSkillsNeeded(), recipe.allSkillsNecessary)) {
                 entity.maxProgress = recipe.getTimeToMake();
                 if (entity.fuel <= 0)
                     addFuel(entity);
@@ -154,7 +154,10 @@ public class SmithingStationBlockEntity extends BlockEntity implements NamedScre
 
         if(hasRecipe(entity)){
             for(int i = 0;i<9;i++){
-                entity.removeStack(i, 1);
+                int x = i%3;
+                int y = i/3;
+                int invIndex = 3*x + y;
+                entity.removeStack(i, match.get().itemCounts.get(invIndex));
             }
             entity.setStack(getResultSlotIndex(), new ItemStack(match.get().getOutput().getItem(), entity.getStack(getResultSlotIndex()).getCount() + 1));
             if(entity.lastInteractingPlayer != null)
@@ -207,12 +210,15 @@ public class SmithingStationBlockEntity extends BlockEntity implements NamedScre
         super.readNbt(nbt);
     }
 
-    public static boolean hasSkill(PlayerEntity player, List<String> skills){
-        if(skills.isEmpty())
+    public static boolean hasSkills(PlayerEntity player, List<String> neededSkills, boolean allSkillsNecessary){
+        if(neededSkills.isEmpty())
             return true;
         List<String> unlockedSkills = ServerData.getOrCreatePlayerData(player.getServer(), player.getUuidAsString()).unlockedSkills;
-        for(String skill : skills){
-            if(unlockedSkills.contains(skill))
+        for(String skill : neededSkills){
+            boolean hasSkill = unlockedSkills.contains(skill);
+            if(allSkillsNecessary && !hasSkill)
+                return false;
+            else if(hasSkill)
                 return true;
         }
 

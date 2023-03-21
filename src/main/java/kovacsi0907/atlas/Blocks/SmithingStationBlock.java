@@ -1,20 +1,22 @@
 package kovacsi0907.atlas.Blocks;
 
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 public class SmithingStationBlock extends BlockWithEntity implements BlockEntityProvider {
@@ -44,6 +46,8 @@ public class SmithingStationBlock extends BlockWithEntity implements BlockEntity
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+
+
     }
 
     @Override
@@ -57,6 +61,17 @@ public class SmithingStationBlock extends BlockWithEntity implements BlockEntity
         }
 
         return  ActionResult.SUCCESS;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        world.setBlockState(pos.up(), new Smithing_Station_Middle(FabricBlockSettings.of(Material.STONE).strength(0.5f).resistance(3.0f), this, Direction.NORTH).getDefaultState());
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        return super.canPlaceAt(state, world, pos);
     }
 
     @Nullable
