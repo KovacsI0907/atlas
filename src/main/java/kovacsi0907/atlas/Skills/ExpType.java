@@ -4,6 +4,5 @@ public enum ExpType {
     MAGIC,
     SMITHING,
     ARCHERY,
-
     BOWYERY
 }

@@ -38,6 +38,7 @@ public class ServerData extends PersistentState {
         ServerData serverData = new ServerData();
         NbtCompound playerDataCompound = mainCompound.getCompound("playerData");
         playerDataCompound.getKeys().forEach((uuid) ->{
+            System.out.println(">>>>" + uuid);
             serverData.playerData.put(uuid, PlayerData.createFromNbt(playerDataCompound.getCompound(uuid), uuid));
         });
 
@@ -45,7 +46,6 @@ public class ServerData extends PersistentState {
         wareStacksCompound.getKeys().forEach((stackId) -> {
             serverData.wareStacks.put(stackId, WareStack.createFromNbt(wareStacksCompound.getCompound(stackId)));
         });
-        System.out.println("LOADEDEDEDEED");
         return serverData;
     }
 

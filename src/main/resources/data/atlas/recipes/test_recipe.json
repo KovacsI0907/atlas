@@ -13,9 +13,14 @@
     0,1,0,
     0,2,0
   ],
+  "counts": [
+    0,1,0,
+    0,1,0,
+    0,2,0
+  ],
   "time": 20,
   "result": {
     "item": "minecraft:bedrock"
   },
-  "xp": 10
+  "xp": 50
 }

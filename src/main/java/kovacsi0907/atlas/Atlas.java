@@ -1,6 +1,7 @@
 package kovacsi0907.atlas;
 
 import kovacsi0907.atlas.Blocks.CustomBlocks;
+import kovacsi0907.atlas.Blocks.CustomGeneration;
 import kovacsi0907.atlas.Data.ServerData;
 import kovacsi0907.atlas.Items.CustomItems;
 import kovacsi0907.atlas.Network.ServerNetworkReceiver;
@@ -32,6 +33,7 @@ public class Atlas implements ModInitializer {
 		CustomItems.registerItems();
 		CustomRecipes.registerRecipes();
 		CustomScreenHandlers.regiterScreenHandlers();
+		CustomGeneration.Generate();
 
 		ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> {
 			ServerData.getOrCreatePlayerData(server, handler.player.getUuidAsString()).money += 100;

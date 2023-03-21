@@ -51,7 +51,11 @@ public abstract class ClientNetworkFunctions {
 
     public static void requestGetMoneyAndWait() {
         ClientPlayNetworking.send(Channels.GET_MONEY, PacketByteBufs.empty());
-        TrackedNetworkReciever.trackAndWait(Channels.GET_MONEY, 20, 1000);
+        TrackedNetworkReciever.trackAndWait(Channels.GET_MONEY, 20, 0);
+    }
+
+    public static void requestGetMoney() {
+        ClientPlayNetworking.send(Channels.GET_MONEY, PacketByteBufs.empty());
     }
 
     public static String buyStackAndWait(String stackUuid, int count, String vendorId) {

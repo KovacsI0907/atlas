@@ -17,6 +17,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -78,7 +79,7 @@ public class BuyScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        ClientNetworkFunctions.requestGetMoneyAndWait();
+        ClientNetworkFunctions.requestGetMoney();
         this.addDrawableChild(buyButton);
         this.addDrawableChild(amountField);
         this.addDrawableChild(leftArrow);
@@ -267,8 +268,12 @@ public class BuyScreen extends Screen {
             if(wareStack.bulkDiscount > 0)
                 row.add(new TextElement(
                     wareStack.bulkDiscount + "% >=" + wareStack.discountVolume, true, true), 0.6f);
+            PlayerEntity player = MinecraftClient.getInstance().world.getPlayerByUuid(UUID.fromString(wareStack.playerUuid));
+            Text name = Text.literal("");
+            if(player != null && player.getDisplayName() != null)
+                name = player.getDisplayName();
             row.add(new TextElement(
-                    MinecraftClient.getInstance().world.getPlayerByUuid(UUID.fromString(wareStack.playerUuid)).getDisplayName(), true, true), 0.8f);
+                    name, true, true), 0.8f);
             table.addRow(row);
         }
     }
