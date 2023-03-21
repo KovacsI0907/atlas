@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "atlas:block/smithing_station_middle"
+    },
+    "facing=east": {
+      "model": "atlas:block/smithing_station_middle",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "atlas:block/smithing_station_middle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "atlas:block/smithing_station_middle",
+      "y": 270
+    }
+  }
+}
+
