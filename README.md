@@ -6,6 +6,9 @@ This project (codenamed: Atlas) is a minecraft mod that aims to bring complexity
 ### Smithing skill tree
 ![Smithing skill tree](https://github.com/user-attachments/assets/96ce06b7-761f-4c61-a77c-fe2b0da52575)
 
+### A few new ores
+![Tin and Silver ore](https://github.com/user-attachments/assets/bd3d45aa-083d-4429-9c0f-4350d3c7e16d)
+
 ### Market sell screen
 ![Market sell screen](https://github.com/user-attachments/assets/4242e2ae-e402-4131-b21f-91de34a8eeb1)
 
